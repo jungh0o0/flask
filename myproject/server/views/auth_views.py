@@ -23,7 +23,7 @@ def signup():
         
         exist_email = User.query.filter_by(email=email).first() # 이메일중복검사
         if exist_email:
-            return jsonify({"error": "이미 등록된 이메일"}), 400
+            return jsonify({"code":"error", "detail": "이미 등록된 이메일"}), 400
         
         if not user: # 고려해야할 사항이 유저이름으로만 동일 유저인지 판단하는데 동명이인 일경우 생각 안한 케이스임
             user = User(                    #  유저객체 생성
@@ -36,11 +36,11 @@ def signup():
             
             
             #print("success")
-            return jsonify({"success": "회원가입 성공"}), 200
+            return jsonify({"code":"success", "detail": "회원가입 성공"}), 200
 
         else:
             #print("fail")
-            return jsonify({"fail": "이미 있는 사용자"}), 409
+            return jsonify({"code":"fail", "detail": "이미 있는 사용자"}), 409
     
 
 #로그인 라우팅 methods=['POST']
@@ -58,17 +58,17 @@ def login():
         if not user:
             error = "존재하지 않는 사용자입니다."
             #print("존재하지않음")
-            return jsonify({"error": error}), 404 
+            return jsonify({"code": "fail", "detail": error}), 404 
          
         elif not check_password_hash(user.password,password):  #저장된 해시 값과 사용자가 입력한 비밀번호
             error = "비밀번호가 올바르지 않습니다."
             #print("비밀번호 다름")
-            return jsonify({"error": error}), 401 
+            return jsonify({"code": "fail", "error": error}), 401 
         
         if error is None:          
             session.clear()
             session['user_id'] = user.id
-            return jsonify({"success": "로그인 성공", "user_id": user.id}), 200
+            return jsonify({"code": "success", "detail": "로그인 성공", "user_id": user.id}), 200
         
         print(error)
     
@@ -88,4 +88,4 @@ def load_logged_in_user():
 def logout():
     print("로그아웃 라우팅 실행")
     session.clear()
-    return jsonify({"success": "로그아웃 되었습니다."}), 200
+    return jsonify({"code":"success", "detail": "로그아웃 되었습니다."}), 200
