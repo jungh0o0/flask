@@ -6,13 +6,9 @@ from server import db
 from server.models import User
 
 bp = Blueprint('auth', __name__, url_prefix='/auth') #블루프린트 객체 생성
-
-print("AUTH_VIEW 진입")
-
 #회원가입 라우팅
 @bp.route('/signup/', methods=('GET', 'POST'))
 def signup():
-    print("회원가입 라우팅 실행")
     json = request.get_json()           # json 형식으로 인풋값 받아오기
     if request.method == 'POST':
         username = json.get("username") #json 데이터에서 분리하기
@@ -46,7 +42,6 @@ def signup():
 #로그인 라우팅 methods=['POST']
 @bp.route('/login/', methods=('GET', 'POST'))
 def login():
-    print("로그인 라우팅 실행")
     json = request.get_json()   # json 형식으로 인풋값 받아오기
     username = json.get("username")     #json 데이터에서 분리하기
     password = json.get("password")
@@ -86,6 +81,5 @@ def load_logged_in_user():
 #로그아웃 라우팅        
 @bp.route('/logout/', methods=['POST'])
 def logout():
-    print("로그아웃 라우팅 실행")
     session.clear()
     return jsonify({"code":"success", "detail": "로그아웃 되었습니다."}), 200
